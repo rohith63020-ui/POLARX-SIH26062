@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// POLARX Data Models
+model Profile {
+  id           String   @id @default(uuid())
+  uid          String   @unique
+  displayName  String?
+  fullName     String?
+  email        String   @unique
+  photoUrl     String?
+  role         String   @default("RESEARCHER")
+  organization String?  @default("NCPOR")
+  station      String?  @default("Bharati Base")
+  createdAt    DateTime @default(now())
+  lastLogin    DateTime @default(now())
+
+  @@map("profiles")
+}
+
+model Location {
+  id           String   @id @default(uuid())
+  code         String   @unique
+  name         String
+  type         String   // STATION | VESSEL | WAYPOINT | OUTPOST
+  coordinates  String?
+  temperature  Float?
+  status       String   @default("OPERATIONAL")
+  createdAt    DateTime @default(now())
+
+  @@map("locations")
+}
+
+model Expedition {
+  id           String   @id @default(uuid())
+  code         String   @unique
+  title        String
+  commander    String
+  station      String
+  status       String   @default("PREPARATION") // PREPARATION | ACTIVE | COMPLETED | EMERGENCY
+  startDate    DateTime
+  endDate      DateTime?
+  personnel    Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  @@map("expeditions")
+}
+
+model InventoryItem {
+  id           String   @id @default(uuid())
+  sku          String   @unique
+  name         String
+  category     String   // FUEL | PROVISIONS | MEDICAL | SCIENTIFIC | GEAR | SPARES
+  quantity     Float
+  unit         String
+  location     String
+  minThreshold Float
+  status       String   @default("HEALTHY") // HEALTHY | LOW_STOCK | CRITICAL | EXPIRED
+  updatedAt    DateTime @updatedAt
+
+  @@map("inventory")
+}
+
+model Incident {
+  id          String   @id @default(uuid())
+  code        String   @unique
+  severity    String   // CRITICAL | HIGH | MEDIUM | LOW
+  title       String
+  location    String
+  reporter    String
+  status      String   @default("OPEN") // OPEN | IN_PROGRESS | RESOLVED | CLOSED
+  description String
+  createdAt   DateTime @default(now())
+
+  @@map("emergency_incidents")
+}

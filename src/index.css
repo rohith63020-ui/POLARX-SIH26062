@@ -1,0 +1,139 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
+
+:root,
+[data-theme="light"] {
+  --bg-app: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-card: #ffffff;
+  --bg-muted: #f1f5f9;
+  --bg-subtle: #f8fafc;
+  --bg-header: rgba(255, 255, 255, 0.95);
+  --bg-input: #ffffff;
+  --bg-modal: #ffffff;
+  
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --text-dim: #94a3b8;
+  
+  --border-primary: #e2e8f0;
+  --border-secondary: #cbd5e1;
+  --border-muted: #f1f5f9;
+  
+  --accent-blue: #0b5ea8;
+  --accent-blue-subtle: #e0f2fe;
+  --accent-ice: #dbeafe;
+  --accent-cyan: #0284c7;
+  
+  --card-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --modal-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+[data-theme="dark"],
+.dark {
+  --bg-app: #021425;
+  --bg-surface: #0a1d2e;
+  --bg-card: #0a1d2e;
+  --bg-muted: #0f2132;
+  --bg-subtle: #071828;
+  --bg-header: rgba(2, 20, 37, 0.95);
+  --bg-input: #0f2132;
+  --bg-modal: #0a1d2e;
+  
+  --text-primary: #d2e4fc;
+  --text-secondary: #c1c6d3;
+  --text-muted: #8b919c;
+  --text-dim: #5a6270;
+  
+  --border-primary: #253648;
+  --border-secondary: #1a2b3d;
+  --border-muted: #112335;
+  
+  --accent-blue: #a4c9ff;
+  --accent-blue-subtle: rgba(11, 94, 168, 0.3);
+  --accent-ice: #0b5ea8;
+  --accent-cyan: #38bdf8;
+  
+  --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+  --modal-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.5);
+}
+
+@layer base {
+  html, body {
+    width: 100vw;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background-color: var(--bg-app);
+    color: var(--text-primary);
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes radarSweep {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-radar {
+  animation: radarSweep 8s linear infinite;
+}
+
+.font-telemetry-num {
+  font-family: 'Space Grotesk', monospace;
+  font-feature-settings: 'tnum' on, 'zero' on;
+}
+
+/* PolarX QR Scanner Customization */
+#polarx-qr-reader {
+  width: 100% !important;
+  border: none !important;
+  background: transparent !important;
+  position: relative !important;
+}
+
+#polarx-qr-reader video {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 380px !important;
+  object-fit: cover !important;
+  border-radius: 1rem !important;
+}
+
+#polarx-qr-reader img[alt="Info icon"],
+#polarx-qr-reader__header_message {
+  display: none !important;
+}
+
+#polarx-qr-reader__scan_region {
+  min-height: 240px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+#polarx-qr-reader__dashboard {
+  display: none !important;
+}

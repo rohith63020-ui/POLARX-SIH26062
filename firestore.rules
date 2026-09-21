@@ -1,0 +1,174 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global Catch-All Safety Net: Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-#]+$');
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        (request.auth.token.email == 'rohith63020@gmail.com') ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'ADMIN')
+      );
+    }
+
+    // Helper for operational records requiring createdBy, createdAt, updatedAt
+    function isValidOperationalRecord(data) {
+      return data.keys().hasAll(['createdBy', 'createdAt', 'updatedAt']) &&
+             data.createdBy is string &&
+             data.createdBy.size() <= 128 &&
+             data.createdAt is string &&
+             data.updatedAt is string;
+    }
+
+    // Validation helper for UserProfile
+    function isValidUser(data) {
+      return data.keys().hasAll(['uid', 'email', 'role']) &&
+             data.uid is string &&
+             data.uid.size() <= 128 &&
+             data.uid == request.auth.uid &&
+             data.email is string &&
+             data.email.size() <= 150 &&
+             data.role in ['ADMIN', 'LOGISTICS_MANAGER', 'EXPEDITION_OFFICER', 'RESEARCHER'] &&
+             (!('displayName' in data) || (data.displayName is string && data.displayName.size() <= 150)) &&
+             (!('fullName' in data) || (data.fullName is string && data.fullName.size() <= 150)) &&
+             (!('photoURL' in data) || (data.photoURL is string && data.photoURL.size() <= 2048)) &&
+             (!('avatarUrl' in data) || (data.avatarUrl is string && data.avatarUrl.size() <= 2048)) &&
+             (!('provider' in data) || (data.provider is string && data.provider.size() <= 50)) &&
+             (!('organization' in data) || (data.organization is string && data.organization.size() <= 100)) &&
+             (!('station' in data) || (data.station is string && data.station.size() <= 100)) &&
+             (!('createdAt' in data) || data.createdAt is string) &&
+             (!('lastLogin' in data) || data.lastLogin is string);
+    }
+
+    // User Profile Collection: users/{userId}
+    match /users/{userId} {
+      allow get: if isSignedIn() && (isOwner(userId) || isAdmin());
+      allow list: if isSignedIn();
+      allow create: if isOwner(userId) && isValidId(userId) && isValidUser(incoming());
+      allow update: if (isOwner(userId) || isAdmin()) && isValidId(userId) && isValidUser(incoming()) && incoming().uid == existing().uid;
+      allow delete: if isAdmin();
+    }
+
+    // Expeditions: expeditions/{expeditionId}
+    match /expeditions/{expeditionId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(expeditionId) && isValidOperationalRecord(incoming());
+      allow update: if isSignedIn() && isValidId(expeditionId) && isValidOperationalRecord(incoming());
+      allow delete: if isAdmin() || (isSignedIn() && existing().createdBy == request.auth.uid);
+    }
+
+    // Assets: assets/{assetId}
+    match /assets/{assetId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(assetId) && isValidOperationalRecord(incoming());
+      allow update: if isSignedIn() && isValidId(assetId) && isValidOperationalRecord(incoming());
+      allow delete: if isAdmin() || (isSignedIn() && existing().createdBy == request.auth.uid);
+    }
+
+    // Cargo: cargo/{cargoId}
+    match /cargo/{cargoId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(cargoId) && isValidOperationalRecord(incoming());
+      allow update: if isSignedIn() && isValidId(cargoId) && isValidOperationalRecord(incoming());
+      allow delete: if isAdmin() || (isSignedIn() && existing().createdBy == request.auth.uid);
+    }
+
+    // Inventory: inventory/{inventoryId}
+    match /inventory/{inventoryId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(inventoryId) && isValidOperationalRecord(incoming());
+      allow update: if isSignedIn() && isValidId(inventoryId) && isValidOperationalRecord(incoming());
+      allow delete: if isAdmin() || (isSignedIn() && existing().createdBy == request.auth.uid);
+    }
+
+    // Personnel: personnel/{personnelId}
+    match /personnel/{personnelId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(personnelId) && isValidOperationalRecord(incoming());
+      allow update: if isSignedIn() && isValidId(personnelId) && isValidOperationalRecord(incoming());
+      allow delete: if isAdmin() || (isSignedIn() && existing().createdBy == request.auth.uid);
+    }
+
+    // Alerts: alerts/{alertId}
+    match /alerts/{alertId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(alertId) && isValidOperationalRecord(incoming());
+      allow update: if isSignedIn() && isValidId(alertId) && isValidOperationalRecord(incoming());
+      allow delete: if isAdmin() || (isSignedIn() && existing().createdBy == request.auth.uid);
+    }
+
+    // Emergencies: emergencies/{emergencyId}
+    match /emergencies/{emergencyId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(emergencyId) && isValidOperationalRecord(incoming());
+      allow update: if isSignedIn() && isValidId(emergencyId) && isValidOperationalRecord(incoming());
+      allow delete: if isAdmin() || (isSignedIn() && existing().createdBy == request.auth.uid);
+    }
+
+    // Emergency Resources: emergencyResources/{resourceId}
+    match /emergencyResources/{resourceId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(resourceId) && isValidOperationalRecord(incoming());
+      allow update: if isSignedIn() && isValidId(resourceId) && isValidOperationalRecord(incoming());
+      allow delete: if isAdmin() || (isSignedIn() && existing().createdBy == request.auth.uid);
+    }
+
+    // Resupply Requests: resupplyRequests/{requestId}
+    match /resupplyRequests/{requestId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(requestId) && isValidOperationalRecord(incoming());
+      allow update: if isSignedIn() && isValidId(requestId) && isValidOperationalRecord(incoming());
+      allow delete: if isAdmin() || (isSignedIn() && existing().createdBy == request.auth.uid);
+    }
+
+    // Activity Logs: activityLogs/{logId}
+    match /activityLogs/{logId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(logId) && isValidOperationalRecord(incoming());
+      allow update: if isSignedIn() && isValidId(logId) && isValidOperationalRecord(incoming());
+      allow delete: if isAdmin() || (isSignedIn() && existing().createdBy == request.auth.uid);
+    }
+
+    // Reports: reports/{reportId}
+    match /reports/{reportId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(reportId) && isValidOperationalRecord(incoming());
+      allow update: if isSignedIn() && isValidId(reportId) && isValidOperationalRecord(incoming());
+      allow delete: if isAdmin() || (isSignedIn() && existing().createdBy == request.auth.uid);
+    }
+
+    // Notifications: notifications/{notificationId}
+    match /notifications/{notificationId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(notificationId) && isValidOperationalRecord(incoming());
+      allow update: if isSignedIn() && isValidId(notificationId) && isValidOperationalRecord(incoming());
+      allow delete: if isSignedIn() && (isAdmin() || existing().createdBy == request.auth.uid || request.auth != null);
+    }
+  }
+}

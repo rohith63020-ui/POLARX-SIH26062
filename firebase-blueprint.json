@@ -1,0 +1,347 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile document stored in users/{uid} for POLARX authentication and role-based access control.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "displayName": { "type": "string", "maxLength": 150 },
+        "fullName": { "type": "string", "maxLength": 150 },
+        "email": { "type": "string", "format": "email", "maxLength": 150 },
+        "photoURL": { "type": "string", "maxLength": 2048 },
+        "avatarUrl": { "type": "string", "maxLength": 2048 },
+        "provider": { "type": "string" },
+        "role": { "type": "string", "enum": ["ADMIN", "LOGISTICS_MANAGER", "EXPEDITION_OFFICER", "RESEARCHER"] },
+        "organization": { "type": "string", "maxLength": 100 },
+        "station": { "type": "string", "maxLength": 100 },
+        "createdAt": { "type": "string" },
+        "lastLogin": { "type": "string" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Expedition": {
+      "title": "Expedition",
+      "description": "Antarctic and Arctic research expedition missions.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 150 },
+        "status": { "type": "string", "enum": ["active", "planning", "delayed", "completed"] },
+        "location": { "type": "string", "maxLength": 200 },
+        "coordinates": { "type": "string", "maxLength": 100 },
+        "commander": { "type": "object" },
+        "startDate": { "type": "string" },
+        "endDate": { "type": "string" },
+        "durationDays": { "type": "number" },
+        "currentDay": { "type": "number" },
+        "progressPercent": { "type": "number" },
+        "objective": { "type": "string" },
+        "weather": { "type": "object" },
+        "manifestSummary": { "type": "string" },
+        "discipline": { "type": "string" },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "name", "status", "createdBy", "createdAt", "updatedAt"]
+    },
+    "Asset": {
+      "title": "Asset",
+      "description": "Heavy machinery, generators, and polar traverse vehicles.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "expeditionId": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 150 },
+        "category": { "type": "string" },
+        "tier": { "type": "string" },
+        "status": { "type": "string" },
+        "healthPercent": { "type": "number" },
+        "location": { "type": "string" },
+        "originPort": { "type": "string" },
+        "destStation": { "type": "string" },
+        "vessel": { "type": "string" },
+        "eta": { "type": "string" },
+        "mass": { "type": "string" },
+        "serialNumber": { "type": "string" },
+        "logId": { "type": "string" },
+        "qrPayload": { "type": "string" },
+        "lastTelemetry": { "type": "string" },
+        "alerts": { "type": "array" },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "name", "category", "status", "createdBy", "createdAt", "updatedAt"]
+    },
+    "Cargo": {
+      "title": "Cargo",
+      "description": "Tracked cargo shipments and payloads.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "expeditionId": { "type": "string", "maxLength": 128 },
+        "assetId": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 150 },
+        "category": { "type": "string" },
+        "tier": { "type": "string" },
+        "status": { "type": "string" },
+        "healthPercent": { "type": "number" },
+        "location": { "type": "string" },
+        "originPort": { "type": "string" },
+        "destStation": { "type": "string" },
+        "vessel": { "type": "string" },
+        "eta": { "type": "string" },
+        "mass": { "type": "string" },
+        "serialNumber": { "type": "string" },
+        "logId": { "type": "string" },
+        "qrPayload": { "type": "string" },
+        "lastTelemetry": { "type": "string" },
+        "alerts": { "type": "array" },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "name", "status", "createdBy", "createdAt", "updatedAt"]
+    },
+    "Inventory": {
+      "title": "Inventory",
+      "description": "Station consumables, fuels, medicines, and scientific reagents.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "expeditionId": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 150 },
+        "category": { "type": "string" },
+        "location": { "type": "string" },
+        "available": { "type": "number" },
+        "minBuffer": { "type": "number" },
+        "unit": { "type": "string" },
+        "burnRate": { "type": "number" },
+        "burnRateUnit": { "type": "string" },
+        "daysRemaining": { "type": "number" },
+        "status": { "type": "string" },
+        "priority": { "type": "number" },
+        "transitOrder": { "type": "object" },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "name", "category", "available", "unit", "createdBy", "createdAt", "updatedAt"]
+    },
+    "Personnel": {
+      "title": "Personnel",
+      "description": "Station and field expedition crew members.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "expeditionId": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "emergencyId": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 150 },
+        "role": { "type": "string" },
+        "station": { "type": "string" },
+        "clearance": { "type": "string" },
+        "status": { "type": "string" },
+        "medicalFitness": { "type": "string" },
+        "contact": { "type": "string" },
+        "specialty": { "type": "string" },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "name", "role", "station", "status", "createdBy", "createdAt", "updatedAt"]
+    },
+    "Alert": {
+      "title": "Alert",
+      "description": "Stock threshold and equipment condition warnings.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "inventoryId": { "type": "string", "maxLength": 128 },
+        "assetId": { "type": "string", "maxLength": 128 },
+        "expeditionId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 200 },
+        "severity": { "type": "string", "enum": ["CRITICAL", "WARNING", "INFO"] },
+        "type": { "type": "string" },
+        "description": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "status": { "type": "string", "enum": ["ACTIVE", "ACKNOWLEDGED", "RESOLVED"] },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "title", "severity", "status", "createdBy", "createdAt", "updatedAt"]
+    },
+    "Emergency": {
+      "title": "Emergency",
+      "description": "SAR operations, whiteouts, medical emergencies, and DEFCON incidents.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "expeditionId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 200 },
+        "defcon": { "type": "string" },
+        "location": { "type": "string" },
+        "coordinates": { "type": "string" },
+        "activeTime": { "type": "string" },
+        "description": { "type": "string" },
+        "personnel": { "type": "array" },
+        "personnelInvolved": { "type": "array" },
+        "responseTeam": { "type": "string" },
+        "personnelInTeam": { "type": "string" },
+        "eta": { "type": "string" },
+        "status": { "type": "string", "enum": ["ACTIVE", "CONTAINED", "RESOLVED"] },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "title", "defcon", "status", "createdBy", "createdAt", "updatedAt"]
+    },
+    "EmergencyResource": {
+      "title": "EmergencyResource",
+      "description": "Medical units, trauma kits, heated stretchers, and SAR response vehicles.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "emergencyId": { "type": "string", "maxLength": 128 },
+        "personnelId": { "type": "string", "maxLength": 128 },
+        "assetId": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 150 },
+        "type": { "type": "string" },
+        "quantity": { "type": "number" },
+        "status": { "type": "string" },
+        "location": { "type": "string" },
+        "assignedTeam": { "type": "string" },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "emergencyId", "name", "status", "createdBy", "createdAt", "updatedAt"]
+    },
+    "ResupplyRequest": {
+      "title": "ResupplyRequest",
+      "description": "Critical resupply orders generated from stock depletion models.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "inventoryId": { "type": "string", "maxLength": 128 },
+        "expeditionId": { "type": "string", "maxLength": 128 },
+        "orderNumber": { "type": "string" },
+        "itemName": { "type": "string" },
+        "requestedQty": { "type": "number" },
+        "unit": { "type": "string" },
+        "priority": { "type": "string", "enum": ["EMERGENCY", "HIGH", "ROUTINE"] },
+        "status": { "type": "string", "enum": ["PENDING", "APPROVED", "IN_TRANSIT", "DELIVERED"] },
+        "destination": { "type": "string" },
+        "eta": { "type": "string" },
+        "vesselOrCarrier": { "type": "string" },
+        "notes": { "type": "string" },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "itemName", "requestedQty", "status", "createdBy", "createdAt", "updatedAt"]
+    },
+    "ActivityLog": {
+      "title": "ActivityLog",
+      "description": "Real-time audit trail and event logs across stations and field sorties.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "expeditionId": { "type": "string", "maxLength": 128 },
+        "emergencyId": { "type": "string", "maxLength": 128 },
+        "inventoryId": { "type": "string", "maxLength": 128 },
+        "type": { "type": "string" },
+        "title": { "type": "string" },
+        "badge": { "type": "string" },
+        "badgeType": { "type": "string" },
+        "details": { "type": "string" },
+        "description": { "type": "string" },
+        "actor": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "status": { "type": "string" },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "type", "description", "createdBy", "createdAt", "updatedAt"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "Centralized system notifications generated from real operational events across polar stations.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "dedupKey": { "type": "string", "maxLength": 200 },
+        "title": { "type": "string", "maxLength": 200 },
+        "message": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "severity": { "type": "string", "enum": ["INFO", "WARNING", "CRITICAL", "SUCCESS"] },
+        "category": { "type": "string", "enum": ["INVENTORY", "CARGO", "ASSET", "EXPEDITION", "PERSONNEL", "EMERGENCY", "RESUPPLY", "SYSTEM"] },
+        "targetTab": { "type": "string" },
+        "targetId": { "type": "string" },
+        "isRead": { "type": "boolean" },
+        "readAt": { "type": "string" },
+        "userId": { "type": "string" },
+        "role": { "type": "string" },
+        "stationId": { "type": "string" },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "title", "message", "severity", "category", "isRead", "createdBy", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": {
+      "schema": "UserProfile",
+      "description": "User profiles and RBAC credentials"
+    },
+    "/expeditions/{expeditionId}": {
+      "schema": "Expedition",
+      "description": "Polar missions and traverse operations"
+    },
+    "/assets/{assetId}": {
+      "schema": "Asset",
+      "description": "Generators, heavy machinery, snowcats and sensors"
+    },
+    "/cargo/{cargoId}": {
+      "schema": "Cargo",
+      "description": "Tracked cargo shipments and freight payloads"
+    },
+    "/inventory/{inventoryId}": {
+      "schema": "Inventory",
+      "description": "Station fuel, medical, ration, and scientific supplies"
+    },
+    "/personnel/{personnelId}": {
+      "schema": "Personnel",
+      "description": "Station crew, researchers, engineers and officers"
+    },
+    "/alerts/{alertId}": {
+      "schema": "Alert",
+      "description": "Threshold drift and inventory alerts"
+    },
+    "/emergencies/{emergencyId}": {
+      "schema": "Emergency",
+      "description": "SAR incidents, DEFCON whiteouts and medical rescues"
+    },
+    "/emergencyResources/{resourceId}": {
+      "schema": "EmergencyResource",
+      "description": "Emergency response equipment, trauma kits, and vehicles"
+    },
+    "/resupplyRequests/{requestId}": {
+      "schema": "ResupplyRequest",
+      "description": "Inter-station and continental resupply orders"
+    },
+    "/activityLogs/{logId}": {
+      "schema": "ActivityLog",
+      "description": "Telemetry sync events and station sitrep logs"
+    },
+    "/notifications/{notificationId}": {
+      "schema": "Notification",
+      "description": "System operational notifications and alert triggers"
+    }
+  }
+}

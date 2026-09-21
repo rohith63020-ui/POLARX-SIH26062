@@ -1,0 +1,6 @@
+{
+  "name": "POLARX - Polar Operations Intelligence",
+  "description": "Integrated Polar Expedition Logistics & Asset Management System for NCPOR Arctic and Antarctic operations, featuring real-time telemetry, offline synchronization, AI predictive modeling, and SAR emergency coordination.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
