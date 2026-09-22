@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <linearGradient id="favGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f0ff" />
+      <stop offset="50%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+    <radialGradient id="favBack" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#071d33" />
+      <stop offset="100%" stop-color="#020e1a" />
+    </radialGradient>
+  </defs>
+  <polygon points="50,4 92,27 92,73 50,96 8,73 8,27" fill="url(#favBack)" stroke="#00f0ff" stroke-width="2.5" stroke-linejoin="round" />
+  <circle cx="50" cy="50" r="28" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.6" />
+  <!-- Cardinal Ticks -->
+  <line x1="50" y1="12" x2="50" y2="20" stroke="#00f0ff" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="50" y1="80" x2="50" y2="88" stroke="#00f0ff" stroke-width="2" stroke-linecap="round" />
+  <line x1="12" y1="50" x2="20" y2="50" stroke="#00f0ff" stroke-width="2" stroke-linecap="round" />
+  <line x1="80" y1="50" x2="88" y2="50" stroke="#00f0ff" stroke-width="2" stroke-linecap="round" />
+  <!-- Central 'X' with North Arrow -->
+  <polygon points="30,28 38,26 70,74 62,76" fill="url(#favGlow)" />
+  <polygon points="70,28 62,26 30,74 38,76" fill="url(#favGlow)" />
+  <polygon points="50,18 53,36 50,40 47,36" fill="#ffffff" />
+  <!-- Core -->
+  <circle cx="50" cy="50" r="4" fill="#ffffff" stroke="#00f0ff" stroke-width="1.5" />
+</svg>

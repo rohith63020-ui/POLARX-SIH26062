@@ -164,6 +164,50 @@ export const getAssets = async (): Promise<CargoAsset[]> => {
   return snap.docs.map((d) => ({ id: d.id, ...d.data() })) as CargoAsset[];
 };
 
+export const fetchAssetByIdFromFirestore = async (
+  assetIdOrCode: string
+): Promise<CargoAsset | null> => {
+  if (!assetIdOrCode) return null;
+  const cleanedCode = assetIdOrCode.trim();
+
+  try {
+    // 1. Direct document lookup in 'assets' collection
+    const assetRef = doc(db, 'assets', cleanedCode);
+    const assetSnap = await getDoc(assetRef);
+    if (assetSnap.exists()) {
+      return { id: assetSnap.id, ...assetSnap.data() } as CargoAsset;
+    }
+
+    // 2. Direct document lookup in 'cargo' collection
+    const cargoRef = doc(db, 'cargo', cleanedCode);
+    const cargoSnap = await getDoc(cargoRef);
+    if (cargoSnap.exists()) {
+      return { id: cargoSnap.id, ...cargoSnap.data() } as CargoAsset;
+    }
+
+    // 3. Query 'assets' collection by qrPayload or serialNumber
+    const assetsCol = collection(db, 'assets');
+    const qQr = query(assetsCol, where('qrPayload', '==', cleanedCode));
+    const snapQr = await getDocs(qQr);
+    if (!snapQr.empty) {
+      const d = snapQr.docs[0];
+      return { id: d.id, ...d.data() } as CargoAsset;
+    }
+
+    const qSerial = query(assetsCol, where('serialNumber', '==', cleanedCode));
+    const snapSerial = await getDocs(qSerial);
+    if (!snapSerial.empty) {
+      const d = snapSerial.docs[0];
+      return { id: d.id, ...d.data() } as CargoAsset;
+    }
+
+    return null;
+  } catch (err) {
+    console.warn('[POLARX Firebase] Firestore asset fetch warning:', err);
+    return null;
+  }
+};
+
 export const createAsset = async (
   asset: Partial<CargoAsset> & { id: string; name: string },
   userId?: string

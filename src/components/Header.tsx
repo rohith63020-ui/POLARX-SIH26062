@@ -280,6 +280,26 @@ export const Header: React.FC<HeaderProps> = ({
 
                   {/* Navigation Actions */}
                   <div className="flex flex-col space-y-0.5 text-[11px] font-headline">
+                    {/* Gmail Dispatch */}
+                    <button
+                      id="menuGmailLink"
+                      onClick={() => {
+                        setProfileOpen(false);
+                        onNavigateTab('gmail');
+                      }}
+                      className="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-[#1a2b3d] text-left text-neutral-800 dark:text-[#d2e4fc] transition-colors font-bold"
+                    >
+                      <span className="material-symbols-outlined text-[17px] text-red-500">
+                        mail
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <span>Gmail Workspace</span>
+                        <span className="px-1 py-0.2 text-[9px] bg-red-500/20 text-red-400 font-mono rounded font-bold">
+                          NEW
+                        </span>
+                      </span>
+                    </button>
+
                     {/* Profile */}
                     <button
                       id="menuProfileLink"

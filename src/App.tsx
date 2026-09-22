@@ -19,6 +19,7 @@ import { ReportsView } from './components/ReportsView';
 import { SettingsView } from './components/SettingsView';
 import { ProfileView } from './components/ProfileView';
 import { AccessDeniedView } from './components/AccessDeniedView';
+import { GmailCommunications } from './components/GmailCommunications';
 import {
   TacticalToast,
   ToastData,
@@ -34,6 +35,7 @@ import { useAuth } from './context/AuthContext';
 import { useTheme } from './context/ThemeContext';
 import { PolarLogo } from './components/PolarLogo';
 import { DEFAULT_AVATARS, ROLE_DETAILS } from './firebase/authService';
+import { App as CapApp } from '@capacitor/app';
 import {
   createAsset,
   createResupplyRequest,
@@ -116,7 +118,9 @@ export default function App() {
       hash === 'personnel' ||
       hash === 'reports' ||
       hash === 'settings' ||
-      hash === 'profile'
+      hash === 'profile' ||
+      hash === 'gmail' ||
+      hash === 'communications'
     ) {
       return hash as AppTab;
     }
@@ -180,6 +184,53 @@ export default function App() {
       window.removeEventListener('offline', handleOffline);
     };
   }, []);
+
+  // Android Native Hardware Back Button Handling
+  useEffect(() => {
+    let backListener: any;
+    const setupBackListener = async () => {
+      try {
+        backListener = await CapApp.addListener('backButton', ({ canGoBack }) => {
+          if (isQrScannerOpen) {
+            setIsQrScannerOpen(false);
+          } else if (isAddAssetOpen) {
+            setIsAddAssetOpen(false);
+          } else if (isResupplyOpen) {
+            setIsResupplyOpen(false);
+          } else if (isIdentityOpen) {
+            setIsIdentityOpen(false);
+          } else if (genericModal.isOpen) {
+            setGenericModal((prev) => ({ ...prev, isOpen: false }));
+          } else if (showLogoutConfirm) {
+            setShowLogoutConfirm(false);
+          } else if (activeTab !== 'dashboard') {
+            setActiveTab('dashboard');
+            window.location.hash = '#dashboard';
+          } else {
+            CapApp.exitApp();
+          }
+        });
+      } catch (err) {
+        // Safe fallback for non-Capacitor web environments
+      }
+    };
+
+    setupBackListener();
+
+    return () => {
+      if (backListener && typeof backListener.remove === 'function') {
+        backListener.remove();
+      }
+    };
+  }, [
+    isQrScannerOpen,
+    isAddAssetOpen,
+    isResupplyOpen,
+    isIdentityOpen,
+    genericModal.isOpen,
+    showLogoutConfirm,
+    activeTab,
+  ]);
 
   // Show Toast Helper
   const showToast = (
@@ -526,6 +577,10 @@ export default function App() {
                     onOpenResupplyModal={() => setIsResupplyOpen(true)}
                     onToast={showToast}
                   />
+                )}
+
+                {(activeTab === 'gmail' || activeTab === 'communications') && (
+                  <GmailCommunications onToast={showToast} />
                 )}
 
                 {activeTab === 'personnel' && (

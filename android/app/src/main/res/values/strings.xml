@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">POLARX</string>
+    <string name="title_activity_main">POLARX</string>
+    <string name="package_name">com.polarx.app</string>
+    <string name="custom_url_scheme">com.polarx.app</string>
+</resources>

@@ -25,6 +25,7 @@ import {
 } from 'firebase/firestore';
 import { auth, db, handleFirestoreError, OperationType } from './config';
 import { FirebaseUserRole, FirestoreUserProfile } from '../types';
+import { setGmailAccessToken } from '../services/gmailService';
 
 export const DEFAULT_AVATARS: Record<FirebaseUserRole, string> = {
   ADMIN: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80',
@@ -177,15 +178,26 @@ export async function loginWithEmail(
  * Updates or creates users/{uid} with: uid, displayName, email, photoURL, provider, role, createdAt, lastLogin
  */
 export async function loginWithGoogle(): Promise<{ user: FirebaseUser; profile: FirestoreUserProfile }> {
-  // 1. Initialize Google Auth Provider
+  // 1. Initialize Google Auth Provider with Workspace Gmail scopes
   const provider = new GoogleAuthProvider();
   provider.setCustomParameters({
     prompt: 'select_account',
   });
+  provider.addScope('https://mail.google.com/');
+  provider.addScope('https://www.googleapis.com/auth/gmail.send');
+  provider.addScope('https://www.googleapis.com/auth/gmail.readonly');
+  provider.addScope('https://www.googleapis.com/auth/gmail.compose');
+  provider.addScope('https://www.googleapis.com/auth/gmail.modify');
 
   // 2. Sign in with popup
   const userCredential = await signInWithPopup(auth, provider);
   const fbUser = userCredential.user;
+
+  // 2b. Extract and cache access token for Gmail Workspace API calls
+  const credential = GoogleAuthProvider.credentialFromResult(userCredential);
+  if (credential?.accessToken) {
+    setGmailAccessToken(credential.accessToken);
+  }
 
   // 3. Check or store user profile in Firestore: users/{uid}
   const now = new Date().toISOString();

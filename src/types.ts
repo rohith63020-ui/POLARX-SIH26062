@@ -23,7 +23,9 @@ export type AppTab =
   | 'personnel'
   | 'reports'
   | 'settings'
-  | 'profile';
+  | 'profile'
+  | 'gmail'
+  | 'communications';
 
 export type StationKey = 'bharati' | 'maitri' | 'himadri';
 export type StationId = StationKey;

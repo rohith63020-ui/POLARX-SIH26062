@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <!-- Dark Mode / Theme Gradients -->
+    <linearGradient id="polarGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f0ff" />
+      <stop offset="50%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+    <linearGradient id="iceFacet" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9" />
+      <stop offset="60%" stop-color="#a4c9ff" stop-opacity="0.7" />
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.4" />
+    </linearGradient>
+    <linearGradient id="auroraRim" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="35%" stop-color="#06b6d4" />
+      <stop offset="70%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#8b5cf6" />
+    </linearGradient>
+    <radialGradient id="polarBackdrop" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0a2540" />
+      <stop offset="75%" stop-color="#031525" />
+      <stop offset="100%" stop-color="#010c17" />
+    </radialGradient>
+    <filter id="iceGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="1.5" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Outer Hexagonal Base (Polar Outpost Shield) -->
+  <polygon points="50,3 91,26.5 91,73.5 50,97 9,73.5 9,26.5" fill="url(#polarBackdrop)" stroke="url(#auroraRim)" stroke-width="1.8" stroke-linejoin="round" />
+
+  <!-- Tactical Concentric Range Rings (Latitude 60° - 90°) -->
+  <circle cx="50" cy="50" r="38" stroke="#38bdf8" stroke-width="0.75" stroke-dasharray="2,3" opacity="0.4" />
+  <circle cx="50" cy="50" r="26" stroke="#a4c9ff" stroke-width="0.75" opacity="0.6" />
+  <circle cx="50" cy="50" r="14" stroke="#00f0ff" stroke-width="0.5" stroke-dasharray="1.5,2.5" opacity="0.5" />
+
+  <!-- Cardinal Bearing Compass Ticks -->
+  <line x1="50" y1="12" x2="50" y2="18" stroke="#00f0ff" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="50" y1="82" x2="50" y2="88" stroke="#00f0ff" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="15" y1="50" x2="21" y2="50" stroke="#00f0ff" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="79" y1="50" x2="85" y2="50" stroke="#00f0ff" stroke-width="1.5" stroke-linecap="round" />
+
+  <!-- Diagonal Compass Rays (45 deg) -->
+  <line x1="26" y1="26" x2="31" y2="31" stroke="#38bdf8" stroke-width="1" stroke-linecap="round" opacity="0.7" />
+  <line x1="74" y1="26" x2="69" y2="31" stroke="#38bdf8" stroke-width="1" stroke-linecap="round" opacity="0.7" />
+  <line x1="26" y1="74" x2="31" y2="69" stroke="#38bdf8" stroke-width="1" stroke-linecap="round" opacity="0.7" />
+  <line x1="74" y1="74" x2="69" y2="69" stroke="#38bdf8" stroke-width="1" stroke-linecap="round" opacity="0.7" />
+
+  <!-- Polar Star North/South Razor Points (Compass Rose) -->
+  <polygon points="50,15 52.5,38 50,42 47.5,38" fill="#ffffff" filter="url(#iceGlow)" />
+  <polygon points="50,85 52.5,62 50,58 47.5,62" fill="#38bdf8" />
+  <polygon points="15,50 38,47.5 42,50 38,52.5" fill="#38bdf8" />
+  <polygon points="85,50 62,47.5 58,50 62,52.5" fill="#38bdf8" />
+
+  <!-- Ice Crystal / Snowflake Six-Point Prisms -->
+  <!-- Top Diagonal Prisms -->
+  <line x1="50" y1="50" x2="25" y2="35" stroke="#a4c9ff" stroke-width="1.2" stroke-linecap="round" opacity="0.8" />
+  <line x1="50" y1="50" x2="75" y2="35" stroke="#a4c9ff" stroke-width="1.2" stroke-linecap="round" opacity="0.8" />
+  <line x1="50" y1="50" x2="25" y2="65" stroke="#a4c9ff" stroke-width="1.2" stroke-linecap="round" opacity="0.8" />
+  <line x1="50" y1="50" x2="75" y2="65" stroke="#a4c9ff" stroke-width="1.2" stroke-linecap="round" opacity="0.8" />
+
+  <!-- The Iconic 'X' - Faceted Polar Ice Chevrons -->
+  <!-- Upper Left to Lower Right Arm -->
+  <polygon points="32,28 39,26 68,72 61,74" fill="url(#polarGlow)" />
+  <polygon points="39,26 43,29 68,72 64,74" fill="url(#iceFacet)" />
+  
+  <!-- Upper Right to Lower Left Arm -->
+  <polygon points="68,28 61,26 32,72 39,74" fill="url(#polarGlow)" />
+  <polygon points="61,26 57,29 32,72 36,74" fill="url(#iceFacet)" />
+
+  <!-- Core Polar Focus Node (Hexagonal Diamond) -->
+  <polygon points="50,43 57,47 57,53 50,57 43,53 43,47" fill="#ffffff" stroke="#00f0ff" stroke-width="1.2" filter="url(#iceGlow)" />
+  <circle cx="50" cy="50" r="2.5" fill="#00f0ff" />
+
+  <!-- Top North Indicator Pip -->
+  <circle cx="50" cy="8" r="2" fill="#00f0ff" />
+</svg>

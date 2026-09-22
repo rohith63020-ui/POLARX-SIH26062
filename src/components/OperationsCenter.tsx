@@ -6,6 +6,7 @@
 import React, { useEffect, useState } from 'react';
 import { OfflineRecord, StationKey } from '../types';
 import { StationTileMap } from './StationTileMap';
+import { LeafletOperationsMap } from './LeafletOperationsMap';
 import { OfflineMapCache } from './OfflineMapCache';
 import { AnimatedTelemetryValue, AnimatedProgressBar } from './AnimatedTelemetryValue';
 import { useData } from '../context/DataContext';
@@ -138,7 +139,7 @@ export const OperationsCenter: React.FC<OperationsCenterProps> = ({
   const effectiveStation = station || currentStation || 'bharati';
   const handleSync = onSyncQueue || onTriggerSync || (() => {});
   const handleNavigate = onNavigateTab || onNavigate || (() => {});
-  const [mapViewMode, setMapViewMode] = useState<'live' | 'offline_cache'>('live');
+  const [mapViewMode, setMapViewMode] = useState<'leaflet' | 'tile' | 'offline_cache'>('leaflet');
   const [clock, setClock] = useState('');
   const [simSeconds, setSimSeconds] = useState(180);
   const [simRunning, setSimRunning] = useState(false);
@@ -1471,19 +1472,31 @@ export const OperationsCenter: React.FC<OperationsCenterProps> = ({
         ))}
       </div>
 
-      {/* Map Mode Selector Ribbon (Live Map vs Offline Cache Vault) */}
+      {/* Map Mode Selector Ribbon (Leaflet GIS Map vs 2D Tactical Grid vs Offline Cache Vault) */}
       <div className="flex items-center justify-between gap-2 flex-wrap bg-neutral-100 dark:bg-[#071A2B] p-2 rounded-xl border border-neutral-200 dark:border-[#253648]">
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 flex-wrap">
           <button
-            onClick={() => setMapViewMode('live')}
+            onClick={() => setMapViewMode('leaflet')}
             className={`px-3 py-1.5 rounded-lg text-xs font-headline font-bold flex items-center gap-1.5 transition-all ${
-              mapViewMode === 'live'
+              mapViewMode === 'leaflet'
                 ? 'bg-black text-white dark:bg-[#0b5ea8] shadow-sm'
                 : 'bg-white dark:bg-[#0f2132] text-neutral-700 dark:text-[#c1c6d3] hover:text-black dark:hover:text-white border border-neutral-200 dark:border-[#253648]'
             }`}
           >
             <span className="material-symbols-outlined text-[16px]">map</span>
-            <span>Live Sector Map</span>
+            <span>Interactive Leaflet GIS Map</span>
+          </button>
+
+          <button
+            onClick={() => setMapViewMode('tile')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-headline font-bold flex items-center gap-1.5 transition-all ${
+              mapViewMode === 'tile'
+                ? 'bg-black text-white dark:bg-[#0b5ea8] shadow-sm'
+                : 'bg-white dark:bg-[#0f2132] text-neutral-700 dark:text-[#c1c6d3] hover:text-black dark:hover:text-white border border-neutral-200 dark:border-[#253648]'
+            }`}
+          >
+            <span className="material-symbols-outlined text-[16px]">grid_view</span>
+            <span>Tactical 2D Grid</span>
           </button>
 
           <button
@@ -1503,9 +1516,11 @@ export const OperationsCenter: React.FC<OperationsCenterProps> = ({
         </div>
 
         <span className="text-[10.5px] font-mono text-neutral-500 dark:text-[#c1c6d3] hidden sm:inline">
-          {mapViewMode === 'live'
-            ? 'Real-time telemetry and hazard sensors'
-            : 'Pre-downloaded sectors for satellite blackout navigation'}
+          {mapViewMode === 'leaflet'
+            ? 'Live GPS routes & offline cached tile rendering'
+            : mapViewMode === 'tile'
+            ? 'Matrix sensor grid'
+            : 'Pre-downloaded map sectors for satellite blackout'}
         </span>
       </div>
 
@@ -1515,13 +1530,20 @@ export const OperationsCenter: React.FC<OperationsCenterProps> = ({
           currentStation={effectiveStation}
           kidMode={kidMode}
           onToast={onToast}
-          onClose={() => setMapViewMode('live')}
+          onClose={() => setMapViewMode('leaflet')}
         />
-      ) : (
+      ) : mapViewMode === 'tile' ? (
         <StationTileMap
           currentStation={effectiveStation}
           onSelectStation={onSelectStation}
           onToast={onToast}
+        />
+      ) : (
+        <LeafletOperationsMap
+          currentStation={effectiveStation}
+          onSelectStation={onSelectStation}
+          onToast={onToast}
+          kidMode={kidMode}
         />
       )}
 

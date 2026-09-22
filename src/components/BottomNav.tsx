@@ -38,6 +38,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
     { id: 'exped', routeKey: 'expeditions', label: 'Exped', kidLabel: 'Explore 🧭', icon: 'explore' },
     { id: 'cargo', routeKey: 'cargo', label: 'Cargo', kidLabel: 'Trucks 🚚', icon: 'local_shipping' },
     { id: 'stock', routeKey: 'inventory', label: 'Stock', kidLabel: 'Food 🥪', icon: 'inventory_2' },
+    { id: 'gmail', routeKey: 'gmail', label: 'Gmail', kidLabel: 'Mail ✉️', icon: 'mail' },
     { id: 'personnel', routeKey: 'personnel', label: 'People', kidLabel: 'Crew 👥', icon: 'badge' },
     { id: 'ai', routeKey: 'ai-insights', label: 'AI Core', kidLabel: 'Robot 🤖', icon: 'smart_toy' },
     { id: 'sos', routeKey: 'emergency', label: 'SOS', kidLabel: 'Help 🚨', icon: 'emergency_home', isDanger: true },
@@ -61,6 +62,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
             (tab.id === 'exped' && (activeTab === 'expeditions' || activeTab === 'exped')) ||
             (tab.id === 'cargo' && (activeTab === 'cargo' || activeTab === 'assets')) ||
             (tab.id === 'stock' && (activeTab === 'stock' || activeTab === 'inventory')) ||
+            (tab.id === 'gmail' && (activeTab === 'gmail' || activeTab === 'communications')) ||
             (tab.id === 'ai' && (activeTab === 'ai' || activeTab === 'ai-insights')) ||
             (tab.id === 'sos' && (activeTab === 'sos' || activeTab === 'emergency'));
           const isDanger = tab.isDanger;

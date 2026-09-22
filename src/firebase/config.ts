@@ -47,17 +47,14 @@ export const auth = getAuth(app);
 // Firestore database instance with explicit firestoreDatabaseId (Required)
 // Auto-detect long polling dynamically negotiates the best WebChannel transport
 let firestoreDb: Firestore;
+const customDatabaseId = (firebaseConfig as { firestoreDatabaseId?: string }).firestoreDatabaseId;
+
 try {
-  firestoreDb = initializeFirestore(
-    app,
-    {
-      experimentalAutoDetectLongPolling: true,
-      ignoreUndefinedProperties: true,
-    },
-    firebaseConfig.firestoreDatabaseId
-  );
+  firestoreDb = customDatabaseId
+    ? initializeFirestore(app, { experimentalAutoDetectLongPolling: true, ignoreUndefinedProperties: true }, customDatabaseId)
+    : initializeFirestore(app, { experimentalAutoDetectLongPolling: true, ignoreUndefinedProperties: true });
 } catch {
-  firestoreDb = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+  firestoreDb = customDatabaseId ? getFirestore(app, customDatabaseId) : getFirestore(app);
 }
 
 export const db = firestoreDb;
